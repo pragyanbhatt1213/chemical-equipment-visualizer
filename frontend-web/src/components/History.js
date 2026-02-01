@@ -15,13 +15,15 @@ function History({ token }) {
   useEffect(() => {
     // Fetch history from backend with authentication token
     // token → proves user is authenticated
-    fetchHistory(token)
-      // If successful, store the data in state
-      // res.data → array of uploads from Django database
-      .then((res) => setHistory(res.data))
-      // If error, log to console (network error, auth failed, etc.)
-      .catch((err) => console.error(err));
-  }, []); // Empty dependency array [] → runs only once on component load
+    if (token) {
+      fetchHistory(token)
+        // If successful, store the data in state
+        // res.data → array of uploads from Django database
+        .then((res) => setHistory(res.data))
+        // If error, log to console (network error, auth failed, etc.)
+        .catch((err) => console.error(err));
+    }
+  }, [token]); // Dependency array includes token → re-runs if token changes
 
   // If no history exists, show message
   if (history.length === 0) {
