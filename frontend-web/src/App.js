@@ -49,7 +49,7 @@ function App() {
     try {
       // POST request to backend /login/ endpoint
       // Sends username and password as JSON
-      const res = await axios.post("http://127.0.0.1:8000/api/login/", {
+      const res = await axios.post("https://chemical-equipment-visualizer-bhii.onrender.com/api/login/", {
         username,
         password,
       });
@@ -249,7 +249,7 @@ function App() {
                 <button
                   onClick={() =>
                     downloadFile(
-                      `http://127.0.0.1:8000/api/generate-pdf/${dataset.id}/`,
+                      `https://chemical-equipment-visualizer-bhii.onrender.com/api/generate-pdf/${dataset.id}/`,
                       "equipment_report.pdf"
                     )
                   }
@@ -261,7 +261,7 @@ function App() {
                 <button
                   onClick={() =>
                     downloadFile(
-                      `http://127.0.0.1:8000/api/export/csv/${dataset.id}/`,
+                      `https://chemical-equipment-visualizer-bhii.onrender.com/api/export/csv/${dataset.id}/`,
                       "equipment_summary.csv"
                     )
                   }
@@ -273,7 +273,7 @@ function App() {
                 <button
                   onClick={() =>
                     downloadFile(
-                      `http://127.0.0.1:8000/api/export/excel/${dataset.id}/`,
+                      `https://chemical-equipment-visualizer-bhii.onrender.com/api/export/excel/${dataset.id}/`,
                       "equipment_summary.xlsx"
                     )
                   }
