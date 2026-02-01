@@ -149,36 +149,20 @@ SPECTACULAR_SETTINGS = {
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-
     'formatters': {
         'simple': {
             'format': '[{levelname}] {asctime} {name}: {message}',
             'style': '{',
         },
     },
-
     'handlers': {
-        'file': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': 'logs/app.log',
-            'formatter': 'simple',
-        },
         'console': {
             'class': 'logging.StreamHandler',
             'formatter': 'simple',
         },
     },
-
-    'loggers': {
-        'django': {
-            'handlers': ['console', 'file'],
-            'level': 'INFO',
-        },
-        'api': {
-            'handlers': ['console', 'file'],
-            'level': 'INFO',
-            'propagate': False,
-        },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
     },
 }
