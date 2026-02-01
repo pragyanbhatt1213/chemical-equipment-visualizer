@@ -2,7 +2,6 @@ import io
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
-import matplotlib.pyplot as plt
 from reportlab.lib.utils import ImageReader
 
 
@@ -11,6 +10,11 @@ def generate_pdf(dataset):
     Generates a PDF report for a Dataset instance.
     Returns PDF as bytes.
     """
+    # Lazy import: matplotlib only loads when PDF is generated
+    # This prevents font cache build during startup
+    import matplotlib
+    matplotlib.use("Agg")  # Non-GUI backend - critical for server
+    import matplotlib.pyplot as plt
 
     # -----------------------------
     # 1. Generate chart image
