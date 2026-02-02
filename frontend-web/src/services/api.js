@@ -1,6 +1,6 @@
 import axios from "axios"; // axios → HTTP client for making API requests
 
-const API_BASE_URL = "https://chemical-equipment-visualizer-bhii.onrender.com/api"; // base URL for all endpoints
+const API_BASE_URL = "http://localhost:8000/api"; // base URL for all endpoints
 
 // Helper function → creates headers with authentication token
 // token → JWT/Token from localStorage

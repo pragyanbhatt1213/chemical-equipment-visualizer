@@ -1,0 +1,16 @@
+# Chemical Equipment Visualizer - Desktop Frontend Requirements
+# Python 3.10+
+
+# GUI Framework
+PyQt5>=5.15.9
+PyQt5-sip>=12.13.0
+
+# HTTP Client
+requests>=2.31.0
+
+# Data Visualization
+matplotlib>=3.8.0
+numpy>=1.24.0
+
+# Utilities
+python-dotenv>=1.0.0

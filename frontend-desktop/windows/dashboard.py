@@ -4,12 +4,14 @@ This module provides the main GUI for the Chemical Equipment Visualizer desktop 
 Users can upload CSV files, view charts, and download PDF reports.
 """
 
+import os
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QLabel, QPushButton,
     QFileDialog, QMessageBox, QListWidget
 )
 
 from utils.charts import show_type_distribution_chart
+from windows.analytics import AnalyticsWindow
 
 
 class DashboardWindow(QWidget):
@@ -56,6 +58,12 @@ class DashboardWindow(QWidget):
         self.chart_btn.clicked.connect(self.show_chart)
         self.chart_btn.setEnabled(False)  # Initially disabled
         self.layout.addWidget(self.chart_btn)
+
+        # Analytics button - displays advanced analytics dashboard (disabled until data is uploaded)
+        self.analytics_btn = QPushButton("📊 Advanced Analytics")
+        self.analytics_btn.clicked.connect(self.show_analytics)
+        self.analytics_btn.setEnabled(False)  # Initially disabled
+        self.layout.addWidget(self.analytics_btn)
 
         # PDF button - downloads PDF report (disabled until data is uploaded)
         self.pdf_btn = QPushButton("Download PDF")
@@ -113,6 +121,7 @@ class DashboardWindow(QWidget):
             )
             # Enable chart and PDF buttons now that data is available
             self.chart_btn.setEnabled(True)
+            self.analytics_btn.setEnabled(True)
             self.pdf_btn.setEnabled(True)
             # Load history after successful upload
             self.load_history()
@@ -156,11 +165,12 @@ class DashboardWindow(QWidget):
             QMessageBox.warning(self, "Error", "Please select a dataset from history")
             return
 
+        filename = "equipment_summary.csv"
         try:
             data = self.api.export_csv(dataset_id)
-            with open("equipment_summary.csv", "wb") as f:
+            with open(filename, "wb") as f:
                 f.write(data)
-            QMessageBox.information(self, "Success", "CSV exported successfully")
+            QMessageBox.information(self, "Success", f"CSV saved as {filename}")
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Export failed: {str(e)}")
 
@@ -171,11 +181,12 @@ class DashboardWindow(QWidget):
             QMessageBox.warning(self, "Error", "Please select a dataset from history")
             return
 
+        filename = "equipment_summary.xlsx"
         try:
             data = self.api.export_excel(dataset_id)
-            with open("equipment_summary.xlsx", "wb") as f:
+            with open(filename, "wb") as f:
                 f.write(data)
-            QMessageBox.information(self, "Success", "Excel exported successfully")
+            QMessageBox.information(self, "Success", f"Excel saved as {filename}")
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Export failed: {str(e)}")
 
@@ -187,16 +198,34 @@ class DashboardWindow(QWidget):
         # Extract type distribution data and pass to chart function
         show_type_distribution_chart(self.dataset["type_distribution"])
 
+    def show_analytics(self):
+        """
+        Display the advanced analytics dashboard.
+        Shows comprehensive analytics with health scores, statistics, visualizations.
+        """
+        if not self.dataset:
+            QMessageBox.warning(self, "Error", "Please upload data first")
+            return
+        
+        self.analytics_window = AnalyticsWindow(self.dataset)
+        self.analytics_window.show()
+
     def download_pdf(self):
         """
         Download PDF report for the uploaded dataset.
-        Sends request to backend and shows success or error message.
+        Saves to the current working directory.
         """
-        # Request PDF download from backend API
-        success = self.api.download_pdf(self.dataset["id"])
+        dataset_id = self.dataset["id"]
+        filename = f"equipment_report_{dataset_id}.pdf"
         
-        # Show appropriate message based on result
-        if success:
-            QMessageBox.information(self, "Success", "PDF downloaded")
-        else:
-            QMessageBox.critical(self, "Error", "PDF download failed")
+        try:
+            # Request PDF download from backend API
+            data = self.api.download_pdf(dataset_id)
+            
+            # Save PDF to file
+            with open(filename, "wb") as f:
+                f.write(data)
+            
+            QMessageBox.information(self, "Success", f"PDF saved as {filename}")
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"PDF download failed: {str(e)}")

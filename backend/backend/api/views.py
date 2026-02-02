@@ -47,6 +47,14 @@ def upload_csv(request):
         avg_pressure=analysis["avg_pressure"],
         avg_temperature=analysis["avg_temperature"],
         type_distribution=analysis["type_distribution"],
+        # New analytics
+        statistics=analysis["statistics"],
+        equipment_data=analysis["equipment_data"],
+        avg_health_score=analysis["avg_health_score"],
+        outliers=analysis["outliers"],
+        outlier_count=analysis["outlier_count"],
+        efficiency_ranking=analysis["efficiency_ranking"],
+        risk_summary=analysis["risk_summary"],
     )
 
     logger.info(f"Dataset created: ID={dataset.id}, Name={file.name}")

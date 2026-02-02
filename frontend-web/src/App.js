@@ -6,6 +6,8 @@ import axios from "axios";
 import Upload from "./components/Upload";
 // Import chart component to visualize equipment types
 import TypeDistributionChart from "./components/TypeDistributionChart";
+// Import analytics component for advanced dashboards
+import Analytics from "./components/Analytics";
 // Import history component to display upload history
 import History from "./components/History";
 // Styling import
@@ -49,7 +51,7 @@ function App() {
     try {
       // POST request to backend /login/ endpoint
       // Sends username and password as JSON
-      const res = await axios.post("https://chemical-equipment-visualizer-bhii.onrender.com/api/login/", {
+      const res = await axios.post("http://localhost:8000/api/login/", {
         username,
         password,
       });
@@ -238,6 +240,9 @@ function App() {
             <TypeDistributionChart data={summary.type_distribution} />
           </div>
 
+          {/* Advanced Analytics Dashboard */}
+          <Analytics summary={summary} equipment_data={summary.equipment_data} />
+
           {/* Exports section → grouped download options for PDF, CSV, Excel */}
           {dataset && (
             <div className="section">
@@ -249,7 +254,7 @@ function App() {
                 <button
                   onClick={() =>
                     downloadFile(
-                      `https://chemical-equipment-visualizer-bhii.onrender.com/api/generate-pdf/${dataset.id}/`,
+                      `http://localhost:8000/api/generate-pdf/${dataset.id}/`,
                       "equipment_report.pdf"
                     )
                   }
@@ -261,7 +266,7 @@ function App() {
                 <button
                   onClick={() =>
                     downloadFile(
-                      `https://chemical-equipment-visualizer-bhii.onrender.com/api/export/csv/${dataset.id}/`,
+                      `http://localhost:8000/api/export/csv/${dataset.id}/`,
                       "equipment_summary.csv"
                     )
                   }
@@ -273,7 +278,7 @@ function App() {
                 <button
                   onClick={() =>
                     downloadFile(
-                      `https://chemical-equipment-visualizer-bhii.onrender.com/api/export/excel/${dataset.id}/`,
+                      `http://localhost:8000/api/export/excel/${dataset.id}/`,
                       "equipment_summary.xlsx"
                     )
                   }

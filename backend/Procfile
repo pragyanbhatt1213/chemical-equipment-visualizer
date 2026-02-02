@@ -1,1 +1,2 @@
-web: gunicorn backend.wsgi
+release: python manage.py migrate && python manage.py create_demo_user
+web: gunicorn backend.wsgi --pythonpath backend --timeout 120
