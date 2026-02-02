@@ -27,21 +27,22 @@ ChartJS.register(
 
 // Analytics Container
 const AnalyticsContainer = styled(Section)`
-  padding: ${({ theme }) => theme.spacing.xl};
+  padding: ${({ theme }) => theme.spacing['2xl']};
   background: ${({ theme }) => theme.colors.gray[50]};
-  border-radius: ${({ theme }) => theme.borderRadius.lg};
-  margin-top: ${({ theme }) => theme.spacing.xl};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
+  margin-top: ${({ theme }) => theme.spacing['2xl']};
 
   h2 {
     color: ${({ theme }) => theme.colors.primary.darkest};
-    margin-bottom: ${({ theme }) => theme.spacing.xl};
+    margin-bottom: ${({ theme }) => theme.spacing['2xl']};
     font-size: ${({ theme }) => theme.typography.fontSizes['2xl']};
     text-align: center;
     font-weight: ${({ theme }) => theme.typography.fontWeights.semibold};
+    letter-spacing: -0.02em;
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    padding: ${({ theme }) => theme.spacing.lg};
+    padding: ${({ theme }) => theme.spacing.xl};
   }
 `;
 
@@ -76,34 +77,42 @@ const StatsTable = styled.table`
   border-collapse: collapse;
   font-size: ${({ theme }) => theme.typography.fontSizes.sm};
   background: ${({ theme }) => theme.colors.white};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   overflow: hidden;
-  box-shadow: ${({ theme }) => theme.shadows.base};
+  box-shadow: ${({ theme }) => theme.shadows.sm};
+  border: 1px solid ${({ theme }) => theme.colors.gray[100]};
 
   thead {
-    background: ${({ theme }) => theme.colors.primary.lightest};
+    background: linear-gradient(135deg, ${({ theme }) => theme.colors.primary.lightest}40, ${({ theme }) => theme.colors.white});
   }
 
   th, td {
-    padding: ${({ theme }) => theme.spacing.md};
+    padding: ${({ theme }) => theme.spacing.lg};
     text-align: center;
-    border-bottom: 1px solid ${({ theme }) => theme.colors.gray[200]};
+    border-bottom: 1px solid ${({ theme }) => theme.colors.gray[100]};
   }
 
   th {
     font-weight: ${({ theme }) => theme.typography.fontWeights.semibold};
     color: ${({ theme }) => theme.colors.primary.dark};
+    font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
   }
 
   tbody tr:hover {
     background: ${({ theme }) => theme.colors.gray[50]};
+  }
+  
+  tbody tr:last-child td {
+    border-bottom: none;
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
     font-size: ${({ theme }) => theme.typography.fontSizes.xs};
     
     th, td {
-      padding: ${({ theme }) => theme.spacing.sm};
+      padding: ${({ theme }) => theme.spacing.md};
     }
   }
 `;
@@ -111,29 +120,30 @@ const StatsTable = styled.table`
 // Visualizations Grid
 const VisualizationsGrid = styled.div`
   display: grid;
-  gap: ${({ theme }) => theme.spacing.xl};
-  margin-bottom: ${({ theme }) => theme.spacing.xl};
+  gap: ${({ theme }) => theme.spacing['2xl']};
+  margin-bottom: ${({ theme }) => theme.spacing['2xl']};
 `;
 
 // Chart.js Container
 const ChartJSContainer = styled.div`
   width: 100%;
-  height: 300px;
+  height: 320px;
   position: relative;
+  padding: ${({ theme }) => theme.spacing.md};
   
   canvas {
-    max-height: 300px !important;
+    max-height: 320px !important;
   }
 `;
 
 // Ranking Section
 const RankingSection = styled(ChartCard)`
-  margin-bottom: ${({ theme }) => theme.spacing.xl};
+  margin-bottom: ${({ theme }) => theme.spacing['2xl']};
 
   h3 {
     margin-top: 0;
     color: ${({ theme }) => theme.colors.primary.darkest};
-    margin-bottom: ${({ theme }) => theme.spacing.lg};
+    margin-bottom: ${({ theme }) => theme.spacing.xl};
   }
 `;
 
@@ -146,8 +156,8 @@ const RankingList = styled.div`
 const RankingItem = styled(motion.div)`
   display: flex;
   align-items: center;
-  padding: ${({ theme }) => theme.spacing.lg};
-  border-left: 4px solid ${({ status, theme }) => {
+  padding: ${({ theme }) => theme.spacing.xl};
+  border-left: 3px solid ${({ status, theme }) => {
     switch (status) {
       case 'excellent':
         return theme.colors.success;
@@ -164,29 +174,32 @@ const RankingItem = styled(motion.div)`
   background: ${({ status, theme }) => {
     switch (status) {
       case 'excellent':
-        return `${theme.colors.success}08`;
+        return `linear-gradient(135deg, ${theme.colors.white} 0%, ${theme.colors.success}04 100%)`;
       case 'good':
-        return `${theme.colors.info}08`;
+        return `linear-gradient(135deg, ${theme.colors.white} 0%, ${theme.colors.info}04 100%)`;
       case 'fair':
-        return `${theme.colors.warning}08`;
+        return `linear-gradient(135deg, ${theme.colors.white} 0%, ${theme.colors.warning}04 100%)`;
       case 'poor':
-        return `${theme.colors.error}08`;
+        return `linear-gradient(135deg, ${theme.colors.white} 0%, ${theme.colors.error}04 100%)`;
       default:
         return theme.colors.gray[50];
     }
   }};
   border-radius: ${({ theme }) => theme.borderRadius.md};
-  gap: ${({ theme }) => theme.spacing.lg};
+  gap: ${({ theme }) => theme.spacing.xl};
   transition: all ${({ theme }) => theme.transitions.normal};
+  border: 1px solid ${({ theme }) => theme.colors.gray[100]};
 
   &:hover {
     transform: translateX(4px);
     box-shadow: ${({ theme }) => theme.shadows.md};
+    border-color: ${({ theme }) => theme.colors.gray[200]};
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
     flex-wrap: wrap;
-    gap: ${({ theme }) => theme.spacing.md};
+    gap: ${({ theme }) => theme.spacing.lg};
+    padding: ${({ theme }) => theme.spacing.lg};
   }
 `;
 
@@ -234,12 +247,12 @@ const Status = styled.span`
 
 // Outliers Section
 const OutliersSection = styled(ChartCard)`
-  margin-bottom: ${({ theme }) => theme.spacing.xl};
+  margin-bottom: ${({ theme }) => theme.spacing['2xl']};
 
   h3 {
     margin-top: 0;
     color: ${({ theme }) => theme.colors.primary.darkest};
-    margin-bottom: ${({ theme }) => theme.spacing.lg};
+    margin-bottom: ${({ theme }) => theme.spacing.xl};
   }
 `;
 
@@ -250,8 +263,8 @@ const OutlierList = styled.div`
 `;
 
 const OutlierItem = styled(motion.div)`
-  padding: ${({ theme }) => theme.spacing.lg};
-  border-left: 4px solid ${({ risk, theme }) => {
+  padding: ${({ theme }) => theme.spacing.xl};
+  border-left: 3px solid ${({ risk, theme }) => {
     switch (risk) {
       case 'high':
         return theme.colors.error;
@@ -266,21 +279,23 @@ const OutlierItem = styled(motion.div)`
   background: ${({ risk, theme }) => {
     switch (risk) {
       case 'high':
-        return `${theme.colors.error}08`;
+        return `linear-gradient(135deg, ${theme.colors.white} 0%, ${theme.colors.error}04 100%)`;
       case 'medium':
-        return `${theme.colors.warning}08`;
+        return `linear-gradient(135deg, ${theme.colors.white} 0%, ${theme.colors.warning}04 100%)`;
       case 'low':
-        return `${theme.colors.success}08`;
+        return `linear-gradient(135deg, ${theme.colors.white} 0%, ${theme.colors.success}04 100%)`;
       default:
         return theme.colors.gray[50];
     }
   }};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   transition: all ${({ theme }) => theme.transitions.normal};
+  border: 1px solid ${({ theme }) => theme.colors.gray[100]};
 
   &:hover {
     transform: translateX(4px);
     box-shadow: ${({ theme }) => theme.shadows.md};
+    border-color: ${({ theme }) => theme.colors.gray[200]};
   }
 `;
 

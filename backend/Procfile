@@ -1,2 +1,2 @@
-release: python manage.py migrate && python manage.py create_demo_user
-web: gunicorn backend.wsgi --pythonpath backend --timeout 120
+release: cd backend && python manage.py migrate && python manage.py create_demo_user
+web: cd backend && gunicorn backend.wsgi --workers 1 --timeout 120

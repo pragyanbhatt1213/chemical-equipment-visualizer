@@ -66,7 +66,7 @@ export const theme = {
     },
   },
 
-  // Spacing System (8px base unit)
+  // Spacing System (8px base unit) - Enhanced for better breathing room
   spacing: {
     xs: '4px',
     sm: '8px',
@@ -76,6 +76,7 @@ export const theme = {
     '2xl': '48px',
     '3xl': '64px',
     '4xl': '96px',
+    '5xl': '128px',
   },
 
   // Border Radius
@@ -88,13 +89,13 @@ export const theme = {
     full: '9999px',
   },
 
-  // Shadows
+  // Shadows - Softer and more subtle for modern 2026 look
   shadows: {
-    sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-    base: '0 2px 8px rgba(0, 0, 0, 0.08)',
-    md: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-    lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-    xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+    sm: '0 1px 2px 0 rgba(0, 0, 0, 0.03)',
+    base: '0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px 0 rgba(0, 0, 0, 0.03)',
+    md: '0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -1px rgba(0, 0, 0, 0.04)',
+    lg: '0 10px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -2px rgba(0, 0, 0, 0.03)',
+    xl: '0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.03)',
   },
 
   // Breakpoints for responsive design
@@ -105,11 +106,11 @@ export const theme = {
     wide: '1200px',
   },
 
-  // Animation timing
+  // Animation timing - Smoother and more refined
   transitions: {
-    fast: '150ms ease-in-out',
-    normal: '300ms ease-in-out',
-    slow: '500ms ease-in-out',
+    fast: '150ms cubic-bezier(0.4, 0, 0.2, 1)',
+    normal: '250ms cubic-bezier(0.4, 0, 0.2, 1)',
+    slow: '400ms cubic-bezier(0.4, 0, 0.2, 1)',
   },
 
   // Z-index scale

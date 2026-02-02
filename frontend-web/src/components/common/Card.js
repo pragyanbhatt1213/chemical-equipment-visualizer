@@ -6,16 +6,18 @@ export const Card = styled(motion.div)`
   background: ${({ theme }) => theme.colors.white};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   box-shadow: ${({ theme }) => theme.shadows.base};
-  padding: ${({ theme }) => theme.spacing.lg};
+  padding: ${({ theme }) => theme.spacing.xl};
   transition: all ${({ theme }) => theme.transitions.normal};
+  border: 1px solid ${({ theme }) => theme.colors.gray[100]};
 
   &:hover {
-    box-shadow: ${({ theme }) => theme.shadows.lg};
-    transform: translateY(-2px);
+    box-shadow: ${({ theme }) => theme.shadows.md};
+    transform: translateY(-1px);
+    border-color: ${({ theme }) => theme.colors.gray[200]};
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    padding: ${({ theme }) => theme.spacing.md};
+    padding: ${({ theme }) => theme.spacing.lg};
   }
 `;
 
@@ -24,23 +26,24 @@ export const MetricCard = styled(Card)`
   text-align: center;
   position: relative;
   overflow: hidden;
+  padding: ${({ theme }) => theme.spacing['2xl']};
   background: ${({ variant, theme }) => {
     switch (variant) {
       case 'primary':
-        return theme.colors.primary.lightest;
+        return `linear-gradient(135deg, ${theme.colors.white} 0%, ${theme.colors.primary.lightest}40 100%)`;
       case 'success':
-        return `${theme.colors.success}08`;
+        return `linear-gradient(135deg, ${theme.colors.white} 0%, ${theme.colors.success}06 100%)`;
       case 'warning':
-        return `${theme.colors.warning}08`;
+        return `linear-gradient(135deg, ${theme.colors.white} 0%, ${theme.colors.warning}06 100%)`;
       case 'error':
-        return `${theme.colors.error}08`;
+        return `linear-gradient(135deg, ${theme.colors.white} 0%, ${theme.colors.error}06 100%)`;
       case 'info':
-        return `${theme.colors.info}08`;
+        return `linear-gradient(135deg, ${theme.colors.white} 0%, ${theme.colors.info}06 100%)`;
       default:
         return theme.colors.white;
     }
   }};
-  border-left: 4px solid ${({ variant, theme }) => {
+  border-left: 3px solid ${({ variant, theme }) => {
     switch (variant) {
       case 'primary':
         return theme.colors.primary.light;
@@ -58,8 +61,8 @@ export const MetricCard = styled(Card)`
   }};
 
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: ${({ theme }) => theme.shadows.xl};
+    transform: translateY(-2px);
+    box-shadow: ${({ theme }) => theme.shadows.lg};
     
     &::before {
       opacity: 1;
@@ -72,7 +75,7 @@ export const MetricCard = styled(Card)`
     top: 0;
     left: 0;
     right: 0;
-    height: 2px;
+    height: 3px;
     background: ${({ variant, theme }) => {
       switch (variant) {
         case 'primary':
@@ -91,6 +94,10 @@ export const MetricCard = styled(Card)`
     }};
     opacity: 0;
     transition: opacity ${({ theme }) => theme.transitions.normal};
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    padding: ${({ theme }) => theme.spacing.xl};
   }
 `;
 
@@ -114,8 +121,9 @@ export const MetricValue = styled.div`
         return theme.colors.primary.dark;
     }
   }};
-  margin: ${({ theme }) => theme.spacing.sm} 0;
+  margin: ${({ theme }) => theme.spacing.md} 0;
   line-height: ${({ theme }) => theme.typography.lineHeights.tight};
+  letter-spacing: -0.02em;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
     font-size: ${({ theme }) => theme.typography.fontSizes['2xl']};
@@ -128,12 +136,12 @@ export const MetricValue = styled.div`
 
 // Metric Label component for descriptions
 export const MetricLabel = styled.div`
-  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
-  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
-  color: ${({ theme }) => theme.colors.gray[600]};
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.semibold};
+  color: ${({ theme }) => theme.colors.gray[500]};
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: ${({ theme }) => theme.spacing.xs};
+  letter-spacing: 0.08em;
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
 `;
 
 // Metric Description component for additional info
@@ -147,13 +155,13 @@ export const MetricDescription = styled.div`
 // Summary Grid for organizing metric cards
 export const SummaryGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: ${({ theme }) => theme.spacing.lg};
-  margin: ${({ theme }) => theme.spacing.xl} 0;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: ${({ theme }) => theme.spacing.xl};
+  margin: ${({ theme }) => theme.spacing['2xl']} 0;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: ${({ theme }) => theme.spacing.md};
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: ${({ theme }) => theme.spacing.lg};
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
@@ -164,27 +172,34 @@ export const SummaryGrid = styled.div`
 
 // Icon wrapper for metric cards
 export const MetricIcon = styled.div`
-  font-size: ${({ theme }) => theme.typography.fontSizes['2xl']};
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
-  opacity: 0.8;
+  font-size: ${({ theme }) => theme.typography.fontSizes['3xl']};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  opacity: 0.7;
+  line-height: 1;
   
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    font-size: ${({ theme }) => theme.typography.fontSizes.xl};
+    font-size: ${({ theme }) => theme.typography.fontSizes['2xl']};
   }
 `;
 
 // Chart Card for wrapping visualizations
 export const ChartCard = styled(Card)`
-  padding: ${({ theme }) => theme.spacing.xl};
+  padding: ${({ theme }) => theme.spacing['2xl']};
 
   h3 {
-    margin-bottom: ${({ theme }) => theme.spacing.lg};
+    margin-bottom: ${({ theme }) => theme.spacing.xl};
     color: ${({ theme }) => theme.colors.primary.dark};
     font-weight: ${({ theme }) => theme.typography.fontWeights.semibold};
+    font-size: ${({ theme }) => theme.typography.fontSizes.xl};
+    letter-spacing: -0.01em;
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    padding: ${({ theme }) => theme.spacing.lg};
+    padding: ${({ theme }) => theme.spacing.xl};
+    
+    h3 {
+      font-size: ${({ theme }) => theme.typography.fontSizes.lg};
+    }
   }
 `;
 

@@ -12,9 +12,9 @@ export const Button = styled(motion.button)`
       case 'sm':
         return `${theme.spacing.sm} ${theme.spacing.md}`;
       case 'lg':
-        return `${theme.spacing.md} ${theme.spacing.xl}`;
+        return `${theme.spacing.lg} ${theme.spacing.xl}`;
       default:
-        return `${theme.spacing.sm} ${theme.spacing.lg}`;
+        return `${theme.spacing.md} ${theme.spacing.lg}`;
     }
   }};
   font-size: ${({ size, theme }) => {
@@ -29,10 +29,11 @@ export const Button = styled(motion.button)`
   }};
   font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
   border-radius: ${({ theme }) => theme.borderRadius.md};
-  border: 2px solid transparent;
+  border: 1.5px solid transparent;
   cursor: pointer;
   transition: all ${({ theme }) => theme.transitions.normal};
   text-decoration: none;
+  letter-spacing: -0.01em;
   
   // Variant styles
   ${({ variant, theme }) => {
@@ -50,18 +51,20 @@ export const Button = styled(motion.button)`
           
           &:active {
             transform: translateY(0);
+            box-shadow: ${theme.shadows.sm};
           }
         `;
       case 'secondary':
         return `
           background: ${theme.colors.white};
           color: ${theme.colors.primary.light};
-          border-color: ${theme.colors.primary.light};
+          border-color: ${theme.colors.gray[300]};
           
           &:hover:not(:disabled) {
-            background: ${theme.colors.primary.lightest};
+            background: ${theme.colors.gray[50]};
+            border-color: ${theme.colors.primary.light};
             transform: translateY(-1px);
-            box-shadow: ${theme.shadows.md};
+            box-shadow: ${theme.shadows.sm};
           }
         `;
       case 'success':
@@ -114,14 +117,14 @@ export const Button = styled(motion.button)`
           &:hover:not(:disabled) {
             background: ${theme.colors.gray[200]};
             transform: translateY(-1px);
-            box-shadow: ${theme.shadows.md};
+            box-shadow: ${theme.shadows.sm};
           }
         `;
     }
   }}
 
   &:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
     transform: none !important;
     box-shadow: none !important;

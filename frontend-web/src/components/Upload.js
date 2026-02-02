@@ -7,8 +7,8 @@ import { Button } from './common';
 // Styled components for modern upload interface
 const UploadContainer = styled(motion.div)`
   background: ${({ theme }) => theme.colors.white};
-  border-radius: ${({ theme }) => theme.borderRadius.lg};
-  padding: ${({ theme }) => theme.spacing.xl};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
+  padding: ${({ theme }) => theme.spacing['2xl']};
   border: 2px dashed ${({ theme, isDragOver }) => 
     isDragOver ? theme.colors.primary.light : theme.colors.gray[300]
   };
@@ -19,7 +19,7 @@ const UploadContainer = styled(motion.div)`
 
   &:hover {
     border-color: ${({ theme }) => theme.colors.primary.light};
-    background: ${({ theme }) => theme.colors.primary.lightest};
+    background: ${({ theme }) => `linear-gradient(135deg, ${theme.colors.white} 0%, ${theme.colors.primary.lightest}20 100%)`};
   }
 
   &::before {
@@ -31,7 +31,7 @@ const UploadContainer = styled(motion.div)`
     height: 100%;
     background: linear-gradient(90deg, 
       transparent, 
-      ${({ theme }) => theme.colors.primary.lightest}40, 
+      ${({ theme }) => theme.colors.primary.lightest}20, 
       transparent
     );
     transition: left 0.6s ease;
@@ -43,9 +43,11 @@ const UploadContainer = styled(motion.div)`
 `;
 
 const UploadIcon = styled(motion.div)`
-  font-size: ${({ theme }) => theme.typography.fontSizes['3xl']};
-  margin-bottom: ${({ theme }) => theme.spacing.md};
+  font-size: ${({ theme }) => theme.typography.fontSizes['4xl']};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
   color: ${({ theme }) => theme.colors.primary.light};
+  opacity: 0.7;
+  line-height: 1;
 `;
 
 const UploadTitle = styled.h3`

@@ -21,11 +21,12 @@ ChartJS.register( //required once tells chart.js which features u will use
 // Styled components for chart container
 const ChartContainer = styled(motion.div)`
   background: ${({ theme }) => theme.colors.white};
-  border-radius: ${({ theme }) => theme.borderRadius.lg};
-  padding: ${({ theme }) => theme.spacing.xl};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
+  padding: ${({ theme }) => theme.spacing['2xl']};
   box-shadow: ${({ theme }) => theme.shadows.base};
   position: relative;
   overflow: hidden;
+  border: 1px solid ${({ theme }) => theme.colors.gray[100]};
 
   &::before {
     content: '';
@@ -33,7 +34,7 @@ const ChartContainer = styled(motion.div)`
     top: 0;
     left: 0;
     right: 0;
-    height: 4px;
+    height: 3px;
     background: linear-gradient(90deg, 
       ${({ theme }) => theme.colors.primary.light}, 
       ${({ theme }) => theme.colors.primary.accent}
@@ -43,24 +44,27 @@ const ChartContainer = styled(motion.div)`
 
 const ChartTitle = styled.h3`
   color: ${({ theme }) => theme.colors.primary.dark};
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
   font-weight: ${({ theme }) => theme.typography.fontWeights.semibold};
+  font-size: ${({ theme }) => theme.typography.fontSizes.xl};
+  letter-spacing: -0.01em;
   display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.spacing.sm};
+  gap: ${({ theme }) => theme.spacing.md};
 
   &::before {
     content: '📊';
-    font-size: ${({ theme }) => theme.typography.fontSizes.xl};
+    font-size: ${({ theme }) => theme.typography.fontSizes['2xl']};
   }
 `;
 
 const ChartWrapper = styled(motion.div)`
   position: relative;
-  height: 400px;
+  height: 420px;
+  padding: ${({ theme }) => theme.spacing.md};
   
   @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    height: 300px;
+    height: 320px;
   }
 `;
 

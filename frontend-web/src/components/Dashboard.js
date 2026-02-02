@@ -51,7 +51,7 @@ const NavItem = styled(motion.li)`
 
 const NavLink = styled.button`
   width: 100%;
-  padding: ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing.md} ${({ theme }) => theme.spacing.lg};
   background: ${({ isActive, theme }) => 
     isActive ? theme.colors.primary.light : 'transparent'
   };
@@ -65,11 +65,14 @@ const NavLink = styled.button`
   transition: all ${({ theme }) => theme.transitions.normal};
   display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.spacing.sm};
+  gap: ${({ theme }) => theme.spacing.md};
+  letter-spacing: -0.01em;
 
   &:hover {
-    background: ${({ theme }) => theme.colors.primary.medium};
-    transform: translateX(4px);
+    background: ${({ isActive, theme }) => 
+      isActive ? theme.colors.primary.light : theme.colors.primary.medium
+    };
+    transform: translateX(2px);
   }
 
   &:focus {
@@ -147,14 +150,14 @@ const UserName = styled.span`
 `;
 
 const ContentArea = styled(motion.div)`
-  padding: ${({ theme }) => theme.spacing.xl};
+  padding: ${({ theme }) => theme.spacing['2xl']};
   
   @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    padding: ${({ theme }) => theme.spacing.lg};
+    padding: ${({ theme }) => theme.spacing.xl};
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    padding: ${({ theme }) => theme.spacing.md};
+    padding: ${({ theme }) => theme.spacing.lg};
   }
 `;
 
