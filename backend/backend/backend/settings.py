@@ -147,20 +147,15 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
     'http://127.0.0.1:3000',
     'http://127.0.0.1:5173',
-    'https://chemical-equipment-visualizer.vercel.app',
-    'http://localhost:3000',
+    'https://chemical-equipment-visualizer-ten.vercel.app',  # Production Vercel domain
+    'https://chemical-equipment-visualizer.vercel.app',  # Alternative Vercel domain
 ]
-# For production, use environment variable to set Vercel domain
-# Example: CORS_ALLOWED_ORIGINS.append(os.environ.get('FRONTEND_URL'))
 
 CORS_ALLOW_CREDENTIALS = True
-# Temporarily allow all for debugging if CORS issues persist
-if os.environ.get('DEBUG_CORS') == 'True':
-    CORS_ALLOW_ALL_ORIGINS = True
-else:
-    CORS_ALLOW_ALL_ORIGINS = False
-    
+CORS_ALLOW_ALL_ORIGINS = False
+
 CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken', 'Authorization']
+CORS_ALLOW_HEADERS = ['Content-Type', 'Authorization', 'X-CSRFToken']
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
