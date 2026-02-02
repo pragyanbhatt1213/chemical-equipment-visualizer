@@ -1,6 +1,312 @@
 import React from "react";
-import { ScatterChart, Scatter, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
-import "./Analytics.css";
+import styled from 'styled-components';
+import { motion } from 'framer-motion';
+import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip as ChartTooltip, Legend as ChartLegend, ArcElement } from 'chart.js';
+import { Bar as ChartJSBar, Pie as ChartJSPie } from 'react-chartjs-2';
+import { 
+  MetricCard, 
+  MetricValue, 
+  MetricLabel, 
+  MetricIcon, 
+  SummaryGrid, 
+  ChartCard, 
+  Section 
+} from "./common";
+
+// Register Chart.js components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  ChartTooltip,
+  ChartLegend,
+  ArcElement
+);
+
+// Analytics Container
+const AnalyticsContainer = styled(Section)`
+  padding: ${({ theme }) => theme.spacing.xl};
+  background: ${({ theme }) => theme.colors.gray[50]};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  margin-top: ${({ theme }) => theme.spacing.xl};
+
+  h2 {
+    color: ${({ theme }) => theme.colors.primary.darkest};
+    margin-bottom: ${({ theme }) => theme.spacing.xl};
+    font-size: ${({ theme }) => theme.typography.fontSizes['2xl']};
+    text-align: center;
+    font-weight: ${({ theme }) => theme.typography.fontWeights.semibold};
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    padding: ${({ theme }) => theme.spacing.lg};
+  }
+`;
+
+// Risk Items Container
+const RiskItems = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing.xs};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  text-align: left;
+`;
+
+const RiskItem = styled.div`
+  font-weight: ${({ theme }) => theme.typography.fontWeights.semibold};
+  color: ${({ risk, theme }) => {
+    switch (risk) {
+      case 'high':
+        return theme.colors.error;
+      case 'medium':
+        return theme.colors.warning;
+      case 'low':
+        return theme.colors.success;
+      default:
+        return theme.colors.gray[600];
+    }
+  }};
+`;
+
+// Statistics Table
+const StatsTable = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  background: ${({ theme }) => theme.colors.white};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  overflow: hidden;
+  box-shadow: ${({ theme }) => theme.shadows.base};
+
+  thead {
+    background: ${({ theme }) => theme.colors.primary.lightest};
+  }
+
+  th, td {
+    padding: ${({ theme }) => theme.spacing.md};
+    text-align: center;
+    border-bottom: 1px solid ${({ theme }) => theme.colors.gray[200]};
+  }
+
+  th {
+    font-weight: ${({ theme }) => theme.typography.fontWeights.semibold};
+    color: ${({ theme }) => theme.colors.primary.dark};
+  }
+
+  tbody tr:hover {
+    background: ${({ theme }) => theme.colors.gray[50]};
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+    
+    th, td {
+      padding: ${({ theme }) => theme.spacing.sm};
+    }
+  }
+`;
+
+// Visualizations Grid
+const VisualizationsGrid = styled.div`
+  display: grid;
+  gap: ${({ theme }) => theme.spacing.xl};
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
+`;
+
+// Chart.js Container
+const ChartJSContainer = styled.div`
+  width: 100%;
+  height: 300px;
+  position: relative;
+  
+  canvas {
+    max-height: 300px !important;
+  }
+`;
+
+// Ranking Section
+const RankingSection = styled(ChartCard)`
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
+
+  h3 {
+    margin-top: 0;
+    color: ${({ theme }) => theme.colors.primary.darkest};
+    margin-bottom: ${({ theme }) => theme.spacing.lg};
+  }
+`;
+
+const RankingList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing.md};
+`;
+
+const RankingItem = styled(motion.div)`
+  display: flex;
+  align-items: center;
+  padding: ${({ theme }) => theme.spacing.lg};
+  border-left: 4px solid ${({ status, theme }) => {
+    switch (status) {
+      case 'excellent':
+        return theme.colors.success;
+      case 'good':
+        return theme.colors.info;
+      case 'fair':
+        return theme.colors.warning;
+      case 'poor':
+        return theme.colors.error;
+      default:
+        return theme.colors.primary.light;
+    }
+  }};
+  background: ${({ status, theme }) => {
+    switch (status) {
+      case 'excellent':
+        return `${theme.colors.success}08`;
+      case 'good':
+        return `${theme.colors.info}08`;
+      case 'fair':
+        return `${theme.colors.warning}08`;
+      case 'poor':
+        return `${theme.colors.error}08`;
+      default:
+        return theme.colors.gray[50];
+    }
+  }};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  gap: ${({ theme }) => theme.spacing.lg};
+  transition: all ${({ theme }) => theme.transitions.normal};
+
+  &:hover {
+    transform: translateX(4px);
+    box-shadow: ${({ theme }) => theme.shadows.md};
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    flex-wrap: wrap;
+    gap: ${({ theme }) => theme.spacing.md};
+  }
+`;
+
+const RankBadge = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  width: 40px;
+  height: 40px;
+  background: ${({ theme }) => theme.colors.primary.light};
+  color: ${({ theme }) => theme.colors.white};
+  border-radius: 50%;
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
+  font-size: ${({ theme }) => theme.typography.fontSizes.base};
+`;
+
+const RankDetails = styled.div`
+  flex: 1;
+  color: ${({ theme }) => theme.colors.primary.darkest};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
+`;
+
+const RankScore = styled.div`
+  display: flex;
+  gap: ${({ theme }) => theme.spacing.md};
+  align-items: center;
+`;
+
+const HealthScore = styled.span`
+  font-size: ${({ theme }) => theme.typography.fontSizes.lg};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
+  color: ${({ theme }) => theme.colors.primary.light};
+`;
+
+const Status = styled.span`
+  padding: ${({ theme }) => theme.spacing.xs} ${({ theme }) => theme.spacing.sm};
+  background: ${({ theme }) => theme.colors.gray[100]};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.semibold};
+  color: ${({ theme }) => theme.colors.gray[600]};
+  text-transform: uppercase;
+`;
+
+// Outliers Section
+const OutliersSection = styled(ChartCard)`
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
+
+  h3 {
+    margin-top: 0;
+    color: ${({ theme }) => theme.colors.primary.darkest};
+    margin-bottom: ${({ theme }) => theme.spacing.lg};
+  }
+`;
+
+const OutlierList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing.md};
+`;
+
+const OutlierItem = styled(motion.div)`
+  padding: ${({ theme }) => theme.spacing.lg};
+  border-left: 4px solid ${({ risk, theme }) => {
+    switch (risk) {
+      case 'high':
+        return theme.colors.error;
+      case 'medium':
+        return theme.colors.warning;
+      case 'low':
+        return theme.colors.success;
+      default:
+        return theme.colors.gray[300];
+    }
+  }};
+  background: ${({ risk, theme }) => {
+    switch (risk) {
+      case 'high':
+        return `${theme.colors.error}08`;
+      case 'medium':
+        return `${theme.colors.warning}08`;
+      case 'low':
+        return `${theme.colors.success}08`;
+      default:
+        return theme.colors.gray[50];
+    }
+  }};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  transition: all ${({ theme }) => theme.transitions.normal};
+
+  &:hover {
+    transform: translateX(4px);
+    box-shadow: ${({ theme }) => theme.shadows.md};
+  }
+`;
+
+const OutlierName = styled.div`
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
+  color: ${({ theme }) => theme.colors.primary.darkest};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.semibold};
+`;
+
+const OutlierParams = styled.div`
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
+  color: ${({ theme }) => theme.colors.gray[600]};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+`;
+
+const OutlierScore = styled.div`
+  display: flex;
+  gap: ${({ theme }) => theme.spacing.lg};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  color: ${({ theme }) => theme.colors.gray[600]};
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    flex-direction: column;
+    gap: ${({ theme }) => theme.spacing.xs};
+  }
+`;
 
 function Analytics({ summary, equipment_data }) {
   if (!summary || !equipment_data) return null;
@@ -55,48 +361,201 @@ function Analytics({ summary, equipment_data }) {
   }));
 
   // ============ HEALTH SCORE DISTRIBUTION ============
-  const healthScores = equipmentList.map((eq) => ({
-    name: eq.name,
-    score: eq.health_score,
-  }));
+  // Note: healthScores variable removed (visualization removed in previous update)
 
   // ============ RISK DISTRIBUTION (PIE CHART) ============
-  const riskData = [
-    { name: "High Risk", value: risk_summary.high_risk, fill: "#ff4444" },
-    { name: "Medium Risk", value: risk_summary.medium_risk, fill: "#ffaa00" },
-    { name: "Low Risk", value: risk_summary.low_risk, fill: "#44aa44" },
-  ];
+  // Note: riskData is kept for potential future use with Recharts pie chart
+  // const riskData = [
+  //   { name: "High Risk", value: risk_summary.high_risk, fill: "#ff4444" },
+  //   { name: "Medium Risk", value: risk_summary.medium_risk, fill: "#ffaa00" },
+  //   { name: "Low Risk", value: risk_summary.low_risk, fill: "#44aa44" },
+  // ];
+
+  // ============ CHART.JS CONFIGURATIONS ============
+  
+  // Flowrate Distribution Chart.js Configuration
+  const flowrateChartData = {
+    labels: histogramData.map(item => item.range),
+    datasets: [
+      {
+        label: 'Equipment Count',
+        data: histogramData.map(item => item.count),
+        backgroundColor: '#8EB69B',
+        borderColor: '#235347',
+        borderWidth: 2,
+        borderRadius: 4,
+        borderSkipped: false,
+      }
+    ]
+  };
+
+  const flowrateChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false,
+      },
+      title: {
+        display: false,
+      },
+      tooltip: {
+        backgroundColor: '#051F20',
+        titleColor: '#FFFFFF',
+        bodyColor: '#FFFFFF',
+        borderColor: '#235347',
+        borderWidth: 1,
+        cornerRadius: 8,
+        displayColors: false,
+        callbacks: {
+          title: (context) => `Range: ${context[0].label}`,
+          label: (context) => `Count: ${context.parsed.y} equipment`,
+        }
+      }
+    },
+    scales: {
+      x: {
+        grid: {
+          color: '#E5E7EB',
+          drawBorder: false,
+        },
+        ticks: {
+          color: '#6B7280',
+          font: {
+            family: 'Inter, sans-serif',
+            size: 12,
+          }
+        }
+      },
+      y: {
+        grid: {
+          color: '#E5E7EB',
+          drawBorder: false,
+        },
+        ticks: {
+          color: '#6B7280',
+          font: {
+            family: 'Inter, sans-serif',
+            size: 12,
+          }
+        }
+      }
+    }
+  };
+
+  // Risk Distribution Pie Chart.js Configuration
+  const riskChartData = {
+    labels: ['High Risk', 'Medium Risk', 'Low Risk'],
+    datasets: [
+      {
+        data: [risk_summary.high_risk, risk_summary.medium_risk, risk_summary.low_risk],
+        backgroundColor: ['#FF4444', '#FFB020', '#20D9A0'],
+        borderColor: ['#FF4444', '#FFB020', '#20D9A0'],
+        borderWidth: 2,
+        hoverOffset: 4,
+      }
+    ]
+  };
+
+  const riskChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          color: '#374151',
+          font: {
+            family: 'Inter, sans-serif',
+            size: 12,
+          },
+          padding: 20,
+          usePointStyle: true,
+          pointStyle: 'circle',
+        }
+      },
+      tooltip: {
+        backgroundColor: '#051F20',
+        titleColor: '#FFFFFF',
+        bodyColor: '#FFFFFF',
+        borderColor: '#235347',
+        borderWidth: 1,
+        cornerRadius: 8,
+        callbacks: {
+          label: (context) => {
+            const label = context.label || '';
+            const value = context.parsed;
+            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+            const percentage = ((value / total) * 100).toFixed(1);
+            return `${label}: ${value} (${percentage}%)`;
+          }
+        }
+      }
+    }
+  };
 
   return (
-    <div className="analytics-container">
+    <AnalyticsContainer
+      as={motion.div}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay: 0.3 }}
+    >
       <h2>📊 Advanced Analytics Dashboard</h2>
 
       {/* ============ SUMMARY CARDS ============ */}
-      <div className="summary-cards">
-        <div className="card health-card">
-          <h3>⭐ Average Health Score</h3>
-          <div className="score">{avg_health_score}</div>
-          <p>out of 100</p>
-        </div>
-        <div className="card risk-card">
-          <h3>🚨 Risk Summary</h3>
-          <div className="risk-items">
-            <div className="risk-high">High: {risk_summary.high_risk}</div>
-            <div className="risk-medium">Medium: {risk_summary.medium_risk}</div>
-            <div className="risk-low">Low: {risk_summary.low_risk}</div>
-          </div>
-        </div>
-        <div className="card outlier-card">
-          <h3>⚠️ Outliers Detected</h3>
-          <div className="score">{outliers.length}</div>
-          <p>equipment items</p>
-        </div>
-      </div>
+      <SummaryGrid>
+        <MetricCard
+          variant="success"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4, delay: 0.1 }}
+          whileHover={{ scale: 1.02 }}
+        >
+          <MetricIcon>⭐</MetricIcon>
+          <MetricLabel>Average Health Score</MetricLabel>
+          <MetricValue variant="success">{avg_health_score}</MetricValue>
+          <p style={{ margin: '4px 0 0 0', color: '#999', fontSize: '12px' }}>out of 100</p>
+        </MetricCard>
+
+        <MetricCard
+          variant="warning"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+          whileHover={{ scale: 1.02 }}
+        >
+          <MetricIcon>🚨</MetricIcon>
+          <MetricLabel>Risk Summary</MetricLabel>
+          <RiskItems>
+            <RiskItem risk="high">High: {risk_summary.high_risk}</RiskItem>
+            <RiskItem risk="medium">Medium: {risk_summary.medium_risk}</RiskItem>
+            <RiskItem risk="low">Low: {risk_summary.low_risk}</RiskItem>
+          </RiskItems>
+        </MetricCard>
+
+        <MetricCard
+          variant="error"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4, delay: 0.3 }}
+          whileHover={{ scale: 1.02 }}
+        >
+          <MetricIcon>⚠️</MetricIcon>
+          <MetricLabel>Outliers Detected</MetricLabel>
+          <MetricValue variant="error">{outliers.length}</MetricValue>
+          <p style={{ margin: '4px 0 0 0', color: '#999', fontSize: '12px' }}>equipment items</p>
+        </MetricCard>
+      </SummaryGrid>
 
       {/* ============ STATISTICAL SUMMARY TABLE ============ */}
-      <div className="stats-table-section">
+      <ChartCard
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.4 }}
+      >
         <h3>📈 Statistical Analysis</h3>
-        <table className="stats-table">
+        <StatsTable>
           <thead>
             <tr>
               <th>Parameter</th>
@@ -133,50 +592,96 @@ function Analytics({ summary, equipment_data }) {
               <td>{statistics.temperature.mean}</td>
             </tr>
           </tbody>
-        </table>
-      </div>
+        </StatsTable>
+      </ChartCard>
 
       {/* ============ VISUALIZATIONS ============ */}
-      <div className="visualizations">
+      <VisualizationsGrid>
         
         {/* Scatter Plot: Pressure vs Temperature */}
-        <div className="chart-section">
+        <ChartCard
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.5 }}
+        >
           <h3>📍 Pressure vs Temperature Correlation</h3>
           <ResponsiveContainer width="100%" height={300}>
             <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis type="number" dataKey="pressure" name="Pressure" />
-              <YAxis type="number" dataKey="temperature" name="Temperature" />
-              <Tooltip cursor={{ strokeDasharray: "3 3" }} />
-              <Legend />
+              <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
+              <XAxis 
+                type="number" 
+                dataKey="pressure" 
+                name="Pressure" 
+                stroke="#6B7280"
+                tick={{ fontSize: 12, fontFamily: 'Inter, sans-serif' }}
+              />
+              <YAxis 
+                type="number" 
+                dataKey="temperature" 
+                name="Temperature" 
+                stroke="#6B7280"
+                tick={{ fontSize: 12, fontFamily: 'Inter, sans-serif' }}
+              />
+              <Tooltip 
+                cursor={{ strokeDasharray: "3 3" }}
+                contentStyle={{
+                  backgroundColor: '#051F20',
+                  border: '1px solid #235347',
+                  borderRadius: '8px',
+                  color: '#FFFFFF',
+                  fontFamily: 'Inter, sans-serif',
+                  fontSize: '12px',
+                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                }}
+                labelStyle={{ color: '#FFFFFF' }}
+                formatter={(value, name) => [
+                  `${value}${name === 'pressure' ? ' bar' : '°C'}`,
+                  name === 'pressure' ? 'Pressure' : 'Temperature'
+                ]}
+                labelFormatter={(label, payload) => {
+                  if (payload && payload.length > 0) {
+                    return `Equipment: ${payload[0].payload.name}`;
+                  }
+                  return '';
+                }}
+              />
+              <Legend 
+                wrapperStyle={{
+                  fontFamily: 'Inter, sans-serif',
+                  fontSize: '12px',
+                  color: '#374151'
+                }}
+              />
               <Scatter
                 name="Equipment"
                 data={scatterData}
-                fill="#8884d8"
+                fill="#235347"
                 shape="circle"
               />
             </ScatterChart>
           </ResponsiveContainer>
-        </div>
+        </ChartCard>
 
-        {/* Histogram: Flowrate Distribution */}
-        <div className="chart-section">
+        {/* Histogram: Flowrate Distribution - Chart.js */}
+        <ChartCard
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.6 }}
+        >
           <h3>📊 Flowrate Distribution</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={histogramData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="range" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="count" fill="#82ca9d" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+          <ChartJSContainer>
+            <ChartJSBar data={flowrateChartData} options={flowrateChartOptions} />
+          </ChartJSContainer>
+        </ChartCard>
 
         {/* Heatmap Table: Equipment Type × Parameters */}
-        <div className="chart-section">
+        <ChartCard
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.7 }}
+        >
           <h3>🔥 Equipment Type Performance Matrix</h3>
-          <table className="heatmap-table">
+          <StatsTable>
             <thead>
               <tr>
                 <th>Equipment Type</th>
@@ -195,89 +700,86 @@ function Analytics({ summary, equipment_data }) {
                 </tr>
               ))}
             </tbody>
-          </table>
-        </div>
+          </StatsTable>
+        </ChartCard>
 
-        {/* Health Score Bar Chart */}
-        <div className="chart-section">
-          <h3>💪 Equipment Health Scores</h3>
-          <ResponsiveContainer width="100%" height={400}>
-            <BarChart data={healthScores} layout="vertical">
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis type="number" domain={[0, 100]} />
-              <YAxis dataKey="name" type="category" width={120} />
-              <Tooltip />
-              <Bar dataKey="score" fill="#8884d8" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-
-        {/* Risk Distribution Pie Chart */}
-        <div className="chart-section">
+        {/* Risk Distribution Pie Chart - Chart.js */}
+        <ChartCard
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.9 }}
+        >
           <h3>⭕ Risk Distribution</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={riskData}
-                cx="50%"
-                cy="50%"
-                labelLine={true}
-                label={({ name, value }) => `${name}: ${value}`}
-                outerRadius={80}
-                fill="#8884d8"
-                dataKey="value"
-              >
-                {riskData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.fill} />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
+          <ChartJSContainer>
+            <ChartJSPie data={riskChartData} options={riskChartOptions} />
+          </ChartJSContainer>
+        </ChartCard>
+      </VisualizationsGrid>
 
       {/* ============ EFFICIENCY RANKING ============ */}
-      <div className="ranking-section">
+      <RankingSection
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 1.0 }}
+      >
         <h3>🏆 Equipment Efficiency Ranking</h3>
-        <div className="ranking-list">
+        <RankingList>
           {efficiency_ranking.slice(0, 10).map((item, idx) => (
-            <div key={idx} className={`ranking-item rank-${item.status.toLowerCase()}`}>
-              <span className="rank-badge">{item.rank}</span>
-              <div className="rank-details">
+            <RankingItem
+              key={idx}
+              status={item.status.toLowerCase()}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3, delay: 1.1 + idx * 0.1 }}
+              whileHover={{ scale: 1.02 }}
+            >
+              <RankBadge>{item.rank}</RankBadge>
+              <RankDetails>
                 <strong>{item.equipment_name}</strong> ({item.type})
-              </div>
-              <div className="rank-score">
-                <span className="health-score">{item.health_score}</span>
-                <span className="status">{item.status}</span>
-              </div>
-            </div>
+              </RankDetails>
+              <RankScore>
+                <HealthScore>{item.health_score}</HealthScore>
+                <Status>{item.status}</Status>
+              </RankScore>
+            </RankingItem>
           ))}
-        </div>
-      </div>
+        </RankingList>
+      </RankingSection>
 
       {/* ============ OUTLIERS ============ */}
       {outliers.length > 0 && (
-        <div className="outliers-section">
+        <OutliersSection
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 1.2 }}
+        >
           <h3>⚠️ Detected Outliers</h3>
-          <div className="outlier-list">
+          <OutlierList>
             {outliers.map((item, idx) => (
-              <div key={idx} className={`outlier-item risk-${item.risk.toLowerCase()}`}>
-                <div className="outlier-name">
+              <OutlierItem
+                key={idx}
+                risk={item.risk.toLowerCase()}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3, delay: 1.3 + idx * 0.1 }}
+                whileHover={{ scale: 1.02 }}
+              >
+                <OutlierName>
                   <strong>{item.equipment_name}</strong> ({item.type})
-                </div>
-                <div className="outlier-params">
+                </OutlierName>
+                <OutlierParams>
                   Flowrate: {item.parameters.flowrate} | Pressure: {item.parameters.pressure} | Temperature: {item.parameters.temperature}
-                </div>
-                <div className="outlier-score">
-                  Health Score: <strong>{item.health_score}</strong> | Risk: <span className={`risk-${item.risk.toLowerCase()}`}>{item.risk}</span>
-                </div>
-              </div>
+                </OutlierParams>
+                <OutlierScore>
+                  <span>Health Score: <strong>{item.health_score}</strong></span>
+                  <span>Risk: <RiskItem risk={item.risk.toLowerCase()}>{item.risk}</RiskItem></span>
+                </OutlierScore>
+              </OutlierItem>
             ))}
-          </div>
-        </div>
+          </OutlierList>
+        </OutliersSection>
       )}
-    </div>
+    </AnalyticsContainer>
   );
 }
 

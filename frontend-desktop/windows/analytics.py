@@ -176,18 +176,40 @@ class AnalyticsWindow(QWidget):
 
     def create_charts(self):
         """Create visualization charts"""
-        layout = QHBoxLayout()
+        charts_frame = QFrame()
+        charts_frame.setStyleSheet("""
+            QFrame {
+                background-color: white;
+                border: none;
+                border-radius: 12px;
+                padding: 20px;
+            }
+        """)
         
-        # Pressure vs Temperature Scatter
+        layout = QVBoxLayout()
+        
+        # Section title
+        charts_title = QLabel("📊 Data Visualizations")
+        charts_title.setStyleSheet("""
+            QLabel {
+                color: #051F20;
+                font-size: 18px;
+                font-weight: 600;
+                margin-bottom: 16px;
+            }
+        """)
+        layout.addWidget(charts_title)
+        
+        chart_layout = QHBoxLayout()
+        
+        # Only show Pressure vs Temperature Scatter plot
         if self.dataset.get('equipment_data'):
             scatter_canvas = self.create_scatter_chart()
-            layout.addWidget(scatter_canvas)
-            
-            # Health Score Distribution
-            health_canvas = self.create_health_chart()
-            layout.addWidget(health_canvas)
+            chart_layout.addWidget(scatter_canvas)
         
-        return layout
+        layout.addLayout(chart_layout)
+        charts_frame.setLayout(layout)
+        return charts_frame
 
     def create_scatter_chart(self):
         """Create pressure vs temperature scatter plot"""

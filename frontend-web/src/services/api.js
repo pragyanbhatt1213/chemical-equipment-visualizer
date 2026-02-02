@@ -1,6 +1,5 @@
 import axios from "axios"; // axios → HTTP client for making API requests
-
-const API_BASE_URL = "http://localhost:8000/api"; // base URL for all endpoints
+import { API_ENDPOINTS } from "../utils/config"; // Import centralized API configuration
 
 // Helper function → creates headers with authentication token
 // token → JWT/Token from localStorage
@@ -22,7 +21,7 @@ const getAuthHeaders = (token) => {
 // password → user's login password
 // Returns response with token on success
 export const login = (username, password) => {
-  return axios.post(`${API_BASE_URL}/login/`, {
+  return axios.post(API_ENDPOINTS.login, {
     username,
     password,
   });
@@ -36,7 +35,7 @@ export const uploadCSV = (file, token) => {
   const formData = new FormData(); // FormData() → required for file upload
   formData.append("file", file); // "file" → must match Django (request.FILES["file"])
 
-  return axios.post(`${API_BASE_URL}/upload/`, formData, {
+  return axios.post(API_ENDPOINTS.upload, formData, {
     // Include authentication header with every upload request
     headers: getAuthHeaders(token),
   });
@@ -46,7 +45,7 @@ export const uploadCSV = (file, token) => {
 // token → authentication token from localStorage
 // Returns list of previous uploads
 export const fetchHistory = (token) => {
-  return axios.get(`${API_BASE_URL}/history/`, {
+  return axios.get(API_ENDPOINTS.history, {
     // Include authentication header with every history request
     headers: getAuthHeaders(token),
   });
