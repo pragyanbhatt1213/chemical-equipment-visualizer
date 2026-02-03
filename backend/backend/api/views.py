@@ -9,6 +9,7 @@ from .models import Dataset
 from .serializers import DatasetSerializer
 from .utils import analyze_csv
 from django.contrib.auth import authenticate
+from django.contrib.auth.models import User  # ✅ ADDED for admin creation
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
 
@@ -122,6 +123,16 @@ def generate_pdf_report(request, dataset_id):
 @api_view(["POST"])
 @permission_classes([permissions.AllowAny])
 def login(request):
+    # 🔐 AUTO CREATE ADMIN IF NOT EXISTS (FREE TIER SAFE)
+    # This lazy-loads on first login request instead of using pre-deploy commands
+    if not User.objects.filter(username="admin").exists():
+        User.objects.create_superuser(
+            username="admin",
+            email="admin@example.com",
+            password="admin123"
+        )
+        logger.info("Admin user created automatically on first login request")
+    
     username = request.data.get("username")
     password = request.data.get("password")
     logger.info(f"Login attempt for user: {username}")
