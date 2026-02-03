@@ -2,7 +2,7 @@
 // Ensures deployment compatibility with Vercel and other platforms
 
 // API Base URL configuration
-export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'https://chemical-equipment-visualizer-bhii.onrender.com/api';
+export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'https://chemical-equipment-visualizer-production-9cad.up.railway.app/api';
 
 // API endpoints
 export const API_ENDPOINTS = {
