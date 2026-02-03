@@ -204,6 +204,9 @@ LOGGING = {
 
 # Security Headers for Production
 if not DEBUG:
+    # Trust Railway's SSL termination (critical for reverse proxy)
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    
     SECURE_SSL_REDIRECT = True
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
