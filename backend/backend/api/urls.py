@@ -7,8 +7,10 @@ from .views import (
     export_csv,
     export_excel
 )
+from .health import healthcheck
 
 urlpatterns = [
+    path("health/", healthcheck),  # ✅ Healthcheck for Railway
     path("login/", login),
     path("upload/", upload_csv),
     path("history/", history),
