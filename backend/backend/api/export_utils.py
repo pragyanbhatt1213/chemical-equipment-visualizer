@@ -1,6 +1,5 @@
 import csv
 import io
-import pandas as pd
 
 
 def generate_csv(dataset):
@@ -8,6 +7,7 @@ def generate_csv(dataset):
     Generates a comprehensive CSV export with equipment data and analytics.
     Returns CSV bytes.
     """
+    import pandas as pd  # LAZY IMPORT - only load when export runs
     buffer = io.StringIO()
     writer = csv.writer(buffer)
 
@@ -120,6 +120,10 @@ def generate_excel(dataset):
     - Sheet 6: Outliers
     Returns Excel bytes.
     """
+    import pandas as pd  # LAZY IMPORT - only load when export runs
+    from openpyxl.styles import Font, PatternFill, Alignment
+    from openpyxl import Workbook
+    
     output = io.BytesIO()
 
     # Sheet 1: Summary

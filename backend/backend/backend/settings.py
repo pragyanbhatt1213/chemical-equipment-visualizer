@@ -29,9 +29,9 @@ if not SECRET_KEY:
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = [
-    'chemical-equipment-visualizer-bhii.onrender.com',
     'localhost',
     '127.0.0.1',
+    '.railway.app',  # Accept any Railway subdomain
 ]
 
 

@@ -1,6 +1,5 @@
 # This file will contain all CSV analysis logic
 # It should NOT contain Django or HTTP code
-import pandas as pd
 import numpy as np
 
 REQUIRED_COLUMNS = [
