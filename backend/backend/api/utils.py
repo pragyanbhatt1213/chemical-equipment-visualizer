@@ -78,6 +78,9 @@ def detect_outliers(df, param):
 
 
 def analyze_csv(file):
+    import pandas as pd
+    import numpy as np
+    
     # Read csv
     df = pd.read_csv(file)
 
