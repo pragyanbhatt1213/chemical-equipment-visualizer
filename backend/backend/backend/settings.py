@@ -154,6 +154,7 @@ CORS_ALLOWED_ORIGINS = [
 
 CSRF_TRUSTED_ORIGINS = [
     'https://chemical-equipment-visualizer-production.vercel.app',
+    'https://*.railway.app',
 ]
 
 CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken', 'Authorization']

@@ -1,12 +1,17 @@
 from django.contrib import admin
 from django.urls import path, include
+from django.http import JsonResponse
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularSwaggerView,
     SpectacularRedocView,
 )
 
+def root(request):
+    return JsonResponse({"status": "running"})
+
 urlpatterns = [
+    path("", root),
     path("admin/", admin.site.urls),
     path("api/", include("api.urls")),
     
