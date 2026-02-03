@@ -123,15 +123,28 @@ def generate_pdf_report(request, dataset_id):
 @api_view(["POST"])
 @permission_classes([permissions.AllowAny])
 def login(request):
-    # 🔐 AUTO CREATE ADMIN IF NOT EXISTS (FREE TIER SAFE)
+    # 🔐 AUTO CREATE DEFAULT USERS IF NOT EXISTS (FREE TIER SAFE)
     # This lazy-loads on first login request instead of using pre-deploy commands
-    if not User.objects.filter(username="admin").exists():
-        User.objects.create_superuser(
-            username="admin",
-            email="admin@example.com",
-            password="admin123"
-        )
-        logger.info("Admin user created automatically on first login request")
+    try:
+        if not User.objects.filter(username="admin").exists():
+            User.objects.create_superuser(
+                username="admin",
+                email="admin@example.com",
+                password="admin123"
+            )
+            logger.info("Admin user created automatically on first login request")
+    except Exception as e:
+        logger.warning(f"Could not create admin user: {str(e)}")
+    
+    try:
+        if not User.objects.filter(username="demo").exists():
+            User.objects.create_user(
+                username="demo",
+                password="demo123"
+            )
+            logger.info("Demo user created automatically on first login request")
+    except Exception as e:
+        logger.warning(f"Could not create demo user: {str(e)}")
     
     username = request.data.get("username")
     password = request.data.get("password")
