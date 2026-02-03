@@ -2,5 +2,5 @@
 builder = "RAILPACK"
 
 [deploy]
-startCommand = "cd backend && python manage.py migrate && gunicorn backend.wsgi --workers 1 --timeout 120"
+startCommand = "cd backend && python manage.py migrate && gunicorn backend.wsgi --workers 1 --bind 0.0.0.0:$PORT --timeout 120"
 restartPolicyType = "on_failure"
